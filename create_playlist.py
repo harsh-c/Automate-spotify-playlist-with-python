@@ -39,10 +39,22 @@ class CreatePlaylist:
         
     # 2: Grab your liked videos from playlist
     def get_liked_videos(self):
-        """Grab Our Liked Videos & Create A Dictionary Of Important Song Information"""
+        # Get playlist id from youtube & Create A Dictionary Of Important Song Information
+        request = self.youtube_client.playlists().list(
+        part="snippet",
+        mine=True
+        )
+        response = request.execute()
+        
+        for item in response["items"]:
+            playlist_name = item["snippet"]["title"]
+            if playlist_name == "music":
+                playlist_id = item["id"]
+
         request = self.youtube_client.playlistItems().list(
-            part="snippet",
-            playlistId="PL7w9ReQfX6Jpi_ULnEuIMsvL6tA89v8Ql"
+            part="snippet", 
+            maxResults=50,
+            playlistId = playlist_id
         )
         response = request.execute()
         print(response)
